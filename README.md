@@ -1,12 +1,6 @@
----
-layout: default
-title: "Transgimelit"
-nav_order: 1
-permalink: /
----
 
 # transgimelit
 
-No-nonsense simple transliteration between writing systems, mostly of Semitic origin. Work in progress. For now, enjoy this simple transliteration table:
+No-nonsense simple transliteration between writing systems, mostly of Semitic origin. Work in progress.
 
-<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS_9JYEHoteErUi75vBzFPP-9xXUTcbfYHYemsB_MsdkhfLpwCEoIbqD8j0wuuPF3cBJzCK05L6NLPK/pubhtml?gid=1241497588&amp;single=true&amp;widget=true&amp;headers=false" style="width:95vw;width:90vh"></iframe>
+See [website](https://twardoch.github.io/transgimelit).
