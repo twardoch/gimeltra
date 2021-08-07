@@ -2,7 +2,7 @@ title: Transgimelit
 description: No-nonsense simple transliteration between writing systems, mostly of Semitic origin
 baseurl: "/transgimelit"
 url: "https://twardoch.github.io"
-remote_theme: mmistakes/minimal-mistakes
+remote_theme: mmistakes/minimal-mistakes@4.22.0
 color_scheme: "white"
 kramdown:
   parse_block_html: true
