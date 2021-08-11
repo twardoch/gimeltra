@@ -1,0 +1,4 @@
+fonttools[unicode]>=4.24.4
+langcodes[data]>=3.1.0
+yaplon>=1.5.7
+regex>=2021.8.3
