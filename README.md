@@ -58,6 +58,7 @@ Less efficient:
 ```python
 from gimeltra import tr
 print(tr("لرموز")
+```
 
 ## Supported scripts
 
