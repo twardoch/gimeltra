@@ -1,6 +1,6 @@
-title: Transgimelit
+title: Gimeltra
 description: No-nonsense simple transliteration between writing systems, mostly of Semitic origin
-baseurl: "/transgimelit"
+baseurl: "/gimeltra"
 url: "https://twardoch.github.io"
 remote_theme: mmistakes/minimal-mistakes@4.24.0
 plugins: 
@@ -15,5 +15,5 @@ collections:
     permalink: /:path/
 permalink: pretty
 
-footer_content: "[Github](https://github.com/twardoch/transgimelit)"
+footer_content: "[Github](https://github.com/twardoch/gimeltra)"
 
