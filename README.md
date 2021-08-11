@@ -77,6 +77,5 @@ Copyright © 2021 Adam Twardoch, [MIT license](./LICENSE)
 
 ## Other projects of interest
 
-- [Wiktra](https://github.com/kbatsuren/wiktra/) — Python transliterator for 100+ scripts and 500+ languages, mostly into Latin but in some cases across other scripts. Uses the Wiktionary transliteration modules written in Lua.
-- [Aksharamukha](https://github.com/virtualvinodh/aksharamukha) - Python (plus JS and web) transliterator within the Indic cultural sphere, for 94 scripts and 8 romanization methods. Does conversion between scripts. 
-
+- [Wiktra](https://github.com/kbatsuren/wiktra/) — Python transliterator for 100+ scripts and 500+ languages, mostly into Latin but in some cases across other scripts. Uses the Wiktionary transliteration modules written in Lua. Needs Lua runtime.
+- [Aksharamukha](https://github.com/virtualvinodh/aksharamukha-python) - Python (plus [JS and web](https://github.com/virtualvinodh/aksharamukha)) transliterator within the Indic cultural sphere, for 94 scripts and 8 romanization methods. Does conversion between scripts.
