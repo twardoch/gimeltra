@@ -73,7 +73,7 @@ def main(*args, **kwargs):
     elif opts["text"]:
         text = opts["text"]
     else:
-        text = sys.stdin.read()
+        text = sys.stdin.read().rstrip()
     tr = gimeltra.gimeltra.Transliterator()
     if opts.get("stats", False):
         print(f'{len(tr.db.keys()) - 1} scripts: {" ".join(tr.db.keys())}')
