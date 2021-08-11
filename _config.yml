@@ -2,10 +2,8 @@ title: Gimeltra
 description: No-nonsense simple transliteration between writing systems, mostly of Semitic origin
 baseurl: "/gimeltra"
 url: "https://twardoch.github.io"
-remote_theme: mmistakes/minimal-mistakes@4.24.0
-plugins: 
-  - jekyll-include-cache
-color_scheme: "white"
+remote_theme: pmarsceill/just-the-docs
+color_scheme: "light"
 kramdown:
   parse_block_html: true
 heading_anchors: true
@@ -14,6 +12,17 @@ collections:
     output: true
     permalink: /:path/
 permalink: pretty
+
+search_enabled: true
+
+search:
+  heading_level: 3
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s/]+/
+  rel_url: true
+  button: true
 
 footer_content: "[Github](https://github.com/twardoch/gimeltra)"
 
