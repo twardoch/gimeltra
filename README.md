@@ -45,7 +45,7 @@ $ gimeltrapy -t "لرموز" -o Sogo
 𐼌𐼘𐼍𐼇𐼈
 ```
 
-Or via piping: 
+Or from stdin / via piping:
 
 ```sh
 $ echo لرموز | gimeltrapy -o Grek
