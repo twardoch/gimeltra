@@ -7,6 +7,7 @@ import gimeltra
 from argparse import ArgumentParser
 import logging
 from pathlib import Path
+import sys
 
 PROG = "gimeltrapy"
 
@@ -69,8 +70,10 @@ def main(*args, **kwargs):
     if opts["in_file"]:
         with open(Path(opts["in_file"]), "r", encoding="utf8") as f:
             text = f.read()
-    else:
+    elif opts["text"]:
         text = opts["text"]
+    else:
+        text = sys.stdin.read()
     tr = gimeltra.gimeltra.Transliterator()
     if opts.get("stats", False):
         print(f'{len(tr.db.keys()) - 1} scripts: {" ".join(tr.db.keys())}')
