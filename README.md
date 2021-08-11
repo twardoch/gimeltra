@@ -3,7 +3,7 @@
 
 Gimeltra is a Python 3.9+ tool for simple transliteration between 20+ writing systems, mostly of Semitic origin.
 
-_This is primarily intended for translating simple texts from modern to ancient scripts. It uses a non-standard romanization scheme. Arabic, Greek or Hebrew letters outside the “basic” old Semitic set will not transliterate._
+Gimeltra performs simplified abjad-only transliteration, and is primarily intended for translating simple texts from modern to ancient scripts. It uses a non-standard romanization scheme. Arabic, Greek or Hebrew letters outside the basic consonant set will not transliterate.
 
 ## Installation
 
