@@ -81,6 +81,8 @@ There are some simple conventions in the table:
 - `~` prefix indicates that this is a final form 
 - `%` separates the from and to strings of a character ligature
 
+(Keep on mind that if the characters in the table are RTL, the browser renders the entire cell as RTL and changes `>` to `<` and vice versa 😀 )
+
 The `Latn` column serves as the intermediary (all conversions are done from the source script through `Latn` to the target script). The column contains some characters that have equivalents only in some scripts. This allows less lossy coversion between, say, Hebrew and Arabic or Ethiopic and Old South Arabian. 
 
 The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion. 
