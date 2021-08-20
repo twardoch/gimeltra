@@ -67,25 +67,31 @@ from gimeltra import tr
 print(tr("لرموز")
 ```
 
-## Supported scripts
+## Supported scripts / tech background
 
-24 scripts: Latn (Latin), Arab (Arabic), Ethi (Ethiopic), Armi (Imperial Aramaic), Brah (Brahmi), Chrs (Chorasmian), Egyp (Egyptian hieroglyphs), Elym (Elymaic), Grek (Greek), Hatr (Hatran), Hebr (Hebrew), Mani (Manichaean), Narb (Old North Arabian), Nbat (Nabataean), Palm (Palmyrene), Phli (Inscriptional Pahlavi), Phlp (Psalter Pahlavi), Phnx (Phoenician), Prti (Inscriptional Parthian), Samr (Samaritan), Sarb (Old South Arabian), Sogd (Sogdian), Sogo (Old Sogdian), Syrc (Syriac), Ugar (Ugaritic)
+Gimeltra supports 24 scripts: Latn (Latin), Arab (Arabic), Ethi (Ethiopic), Armi (Imperial Aramaic), Brah (Brahmi), Chrs (Chorasmian), Egyp (Egyptian hieroglyphs), Elym (Elymaic), Grek (Greek), Hatr (Hatran), Hebr (Hebrew), Mani (Manichaean), Narb (Old North Arabian), Nbat (Nabataean), Palm (Palmyrene), Phli (Inscriptional Pahlavi), Phlp (Psalter Pahlavi), Phnx (Phoenician), Prti (Inscriptional Parthian), Samr (Samaritan), Sarb (Old South Arabian), Sogd (Sogdian), Sogo (Old Sogdian), Syrc (Syriac), Ugar (Ugaritic)
 
-The below [table](gimaltra/gimeltra) exists in `.numbers` and `.tsv` formats. The `.numbers` file is the source, which I export to `.tsv`, and then I [update](gimaltra/gimeltra/update.py) the `.json`, which the transliterator uses. 
+The below [table](gimaltra/gimeltra) exists in `.numbers` and `.tsv` formats. The `.numbers` file is the source, which I export to `.tsv`, and then I [update](gimaltra/gimeltra/update.py) the `.json`, which the transliterator uses.
 
-There are some simple conventions in the table: 
+There are some simple conventions in the table:
 
 - `|` separates alternate versions of a character
 - `<` prefix means that we should only convert from this character but not to it
 - `>` prefix means that we should only convert to this character but not from it
-- `~` prefix indicates that this is a final form 
+- `~` prefix indicates that this is a final form
 - `%` separates the from and to strings of a character ligature
 
 (Keep on mind that if the characters in the table are RTL, the browser renders the entire cell as RTL and changes `>` to `<` and vice versa 😀 )
 
-The `Latn` column serves as the intermediary (all conversions are done from the source script through `Latn` to the target script). The column contains some characters that have equivalents only in some scripts. This allows less lossy coversion between, say, Hebrew and Arabic or Ethiopic and Old South Arabian. 
+The `Latn` column serves as the intermediary (all conversions are done from the source script through `Latn` to the target script). The column contains some characters that have equivalents only in some scripts. This allows less lossy coversion between, say, Hebrew and Arabic or Ethiopic and Old South Arabian.
 
-The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion. 
+The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion.
+
+The conversion uses the [JSON](gimeltra/gimeltra/gimeltra_data.json) file derived from these tables. The selection of the conversion rules is based on ISO 15924 script codes. The code mimics a simple OpenType glyph processing model, but with Unicode characters:
+
+- preprocessing with a `ccmp` table (splitting ligatures into single letters)
+- character replacement in the `csub` table — first checking source-target script mapping, but if that does not exist, conversion into Latin and then from Latin
+- postprocessing with `fina` table (contextual final forms), and then finally `liga` table (ligatures).
 
 
 |Latn|<Latn|Name  |Arab|Ethi|Armi|Brah|Chrs  |Egyp|Elym|Grek      |Hatr|Hebr  |Mani|Narb|Nbat  |Palm  |Phli|Phlp|Phnx|Prti|Samr|Sarb|Sogd|Sogo   |Syrc |Ugar  |
