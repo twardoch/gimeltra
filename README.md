@@ -77,7 +77,14 @@ There are some simple conventions in the table:
 
 - `|` separates alternate versions of a character
 - `<` prefix means that we should only convert from this character but not to it
+- `>` prefix means that we should only convert to this character but not from it
 - `~` prefix indicates that this is a final form 
+- `%` separates the from and to strings of a character ligature
+
+The `Latn` column serves as the intermediary (all conversions are done from the source script through `Latn` to the target script). The column contains some characters that have equivalents only in some scripts. This allows less lossy coversion between, say, Hebrew and Arabic or Ethiopic and Old South Arabian. 
+
+The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion. 
+
 
 |Latn|<Latn|Name  |Arab|Ethi|Armi|Brah|Chrs  |Egyp|Elym|Grek      |Hatr|Hebr  |Mani|Narb|Nbat  |Palm  |Phli|Phlp|Phnx|Prti|Samr|Sarb|Sogd|Sogo   |Syrc |Ugar  |
 |----|-----|------|----|----|----|----|------|----|----|----------|----|------|----|----|------|------|----|----|----|----|----|----|----|-------|-----|------|
