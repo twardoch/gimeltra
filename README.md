@@ -71,7 +71,7 @@ print(tr("لرموز")
 
 Gimeltra supports 24 scripts: Latn (Latin), Arab (Arabic), Ethi (Ethiopic), Armi (Imperial Aramaic), Brah (Brahmi), Chrs (Chorasmian), Egyp (Egyptian hieroglyphs), Elym (Elymaic), Grek (Greek), Hatr (Hatran), Hebr (Hebrew), Mani (Manichaean), Narb (Old North Arabian), Nbat (Nabataean), Palm (Palmyrene), Phli (Inscriptional Pahlavi), Phlp (Psalter Pahlavi), Phnx (Phoenician), Prti (Inscriptional Parthian), Samr (Samaritan), Sarb (Old South Arabian), Sogd (Sogdian), Sogo (Old Sogdian), Syrc (Syriac), Ugar (Ugaritic)
 
-The below [table](gimeltra/) exists in `.numbers` and `.tsv` formats. The `.numbers` file is the source, which I export to `.tsv`, and then I [update](gimeltra/update.py) the `.json`, which the transliterator uses.
+The below [table](gimeltra/) exists in `.numbers` and `.tsv` formats. The `.numbers` file is the source, which I export to `.tsv`, and then I [update](gimeltra/update.py) the [`.json`](gimeltra/gimeltra_data.json), which the transliterator uses.
 
 There are some simple conventions in the table:
 
@@ -87,7 +87,7 @@ The `Latn` column serves as the intermediary (all conversions are done from the 
 
 The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion.
 
-The conversion uses the [JSON](gimeltra/gimeltra_data.json) file derived from these tables. The selection of the conversion rules is based on ISO 15924 script codes. The code mimics a simple OpenType glyph processing model, but with Unicode characters:
+The conversion uses the [`.json`](gimeltra/gimeltra_data.json) file derived from the `.tsv` table. The selection of the conversion rules is based on ISO 15924 script codes. The code mimics a simple OpenType glyph processing model, but with Unicode characters:
 
 - preprocessing with a `ccmp` table (splitting ligatures into single letters)
 - character replacement in the `csub` table — first checking source-target script mapping, but if that does not exist, conversion into Latin and then from Latin
