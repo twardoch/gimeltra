@@ -69,7 +69,7 @@ print(tr("لرموز")
 
 ## Supported scripts / tech background
 
-Gimeltra supports 24 scripts: 
+Gimeltra supports 24 scripts:
 
 - `Latn` (Latin)
 - `Arab` (Arabic)
