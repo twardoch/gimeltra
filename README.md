@@ -69,7 +69,33 @@ print(tr("لرموز")
 
 ## Supported scripts / tech background
 
-Gimeltra supports 24 scripts: Latn (Latin), Arab (Arabic), Ethi (Ethiopic), Armi (Imperial Aramaic), Brah (Brahmi), Chrs (Chorasmian), Egyp (Egyptian hieroglyphs), Elym (Elymaic), Grek (Greek), Hatr (Hatran), Hebr (Hebrew), Mani (Manichaean), Narb (Old North Arabian), Nbat (Nabataean), Palm (Palmyrene), Phli (Inscriptional Pahlavi), Phlp (Psalter Pahlavi), Phnx (Phoenician), Prti (Inscriptional Parthian), Samr (Samaritan), Sarb (Old South Arabian), Sogd (Sogdian), Sogo (Old Sogdian), Syrc (Syriac), Ugar (Ugaritic)
+Gimeltra supports 24 scripts: 
+
+- `Latn` (Latin)
+- `Arab` (Arabic)
+- `Ethi` (Ethiopic)
+- `Armi` (Imperial Aramaic)
+- `Brah` (Brahmi)
+- `Chrs` (Chorasmian)
+- `Egyp` (Egyptian hieroglyphs)
+- `Elym` (Elymaic)
+- `Grek` (Greek)
+- `Hatr` (Hatran)
+- `Hebr` (Hebrew)
+- `Mani` (Manichaean)
+- `Narb` (Old North Arabian)
+- `Nbat` (Nabataean)
+- `Palm` (Palmyrene)
+- `Phli` (Inscriptional Pahlavi)
+- `Phlp` (Psalter Pahlavi)
+- `Phnx` (Phoenician)
+- `Prti` (Inscriptional Parthian)
+- `Samr` (Samaritan)
+- `Sarb` (Old South Arabian)
+- `Sogd` (Sogdian)
+- `Sogo` (Old Sogdian)
+- `Syrc` (Syriac)
+- `Ugar` (Ugaritic)
 
 ### Conversion steps
 
@@ -77,19 +103,19 @@ The conversion uses the [`.json`](gimeltra/gimeltra_data.json) file derived from
 
 #### 1. Preprocessing with a `ccmp` table
 
-1. Split ligatures into single letters, also 
+1. Split ligatures into single letters, also
 2. Decompose into Unicode NFD and drop the marks.
 
 #### 2. Character replacement in the `csub` table
 
-1. Try direct source-target script mapping. 
-2. If that does not exist, convert into `Latn`. 
+1. Try direct source-target script mapping.
+2. If that does not exist, convert into `Latn`.
 3. Try from `Latn` to target script
 4. If that’s not available, fallback from `Latn` to `<Latn` and try to convert to the target script.
 
-#### 3. Postprocessing 
+#### 3. Postprocessing
 
-1. Replace letters by their contextual final forms using the `fina` table. 
+1. Replace letters by their contextual final forms using the `fina` table.
 2. Replace series of letters by Unicode ligatures using the `liga` table.
 
 Characters that aren’t covered by the mappings are passed through. This may change in future (or there will be an option to keep non-letters but drop letters and marks).
