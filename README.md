@@ -71,6 +71,31 @@ print(tr("لرموز")
 
 Gimeltra supports 24 scripts: Latn (Latin), Arab (Arabic), Ethi (Ethiopic), Armi (Imperial Aramaic), Brah (Brahmi), Chrs (Chorasmian), Egyp (Egyptian hieroglyphs), Elym (Elymaic), Grek (Greek), Hatr (Hatran), Hebr (Hebrew), Mani (Manichaean), Narb (Old North Arabian), Nbat (Nabataean), Palm (Palmyrene), Phli (Inscriptional Pahlavi), Phlp (Psalter Pahlavi), Phnx (Phoenician), Prti (Inscriptional Parthian), Samr (Samaritan), Sarb (Old South Arabian), Sogd (Sogdian), Sogo (Old Sogdian), Syrc (Syriac), Ugar (Ugaritic)
 
+### Conversion steps
+
+The conversion uses the [`.json`](gimeltra/gimeltra_data.json) file derived from the `.tsv` table. The selection of the conversion rules is based on ISO 15924 script codes. The code mimics a simple OpenType glyph processing model, but with Unicode characters:
+
+#### 1. Preprocessing with a `ccmp` table
+
+1. Split ligatures into single letters, also 
+2. Decompose into Unicode NFD and drop the marks.
+
+#### 2. Character replacement in the `csub` table
+
+1. Try direct source-target script mapping. 
+2. If that does not exist, convert into `Latn`. 
+3. Try from `Latn` to target script
+4. If that’s not available, fallback from `Latn` to `<Latn` and try to convert to the target script.
+
+#### 3. Postprocessing 
+
+1. Replace letters by their contextual final forms using the `fina` table. 
+2. Replace series of letters by Unicode ligatures using the `liga` table.
+
+Characters that aren’t covered by the mappings are passed through. This may change in future (or there will be an option to keep non-letters but drop letters and marks).
+
+### Data table
+
 The below [table](gimeltra/) exists in `.numbers` and `.tsv` formats. The `.numbers` file is the source, which I export to `.tsv`, and then I [update](gimeltra/update.py) the [`.json`](gimeltra/gimeltra_data.json), which the transliterator uses.
 
 There are some simple conventions in the table:
@@ -86,12 +111,6 @@ There are some simple conventions in the table:
 The `Latn` column serves as the intermediary (all conversions are done from the source script through `Latn` to the target script). The column contains some characters that have equivalents only in some scripts. This allows less lossy coversion between, say, Hebrew and Arabic or Ethiopic and Old South Arabian.
 
 The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion.
-
-The conversion uses the [`.json`](gimeltra/gimeltra_data.json) file derived from the `.tsv` table. The selection of the conversion rules is based on ISO 15924 script codes. The code mimics a simple OpenType glyph processing model, but with Unicode characters:
-
-- preprocessing with a `ccmp` table (splitting ligatures into single letters)
-- character replacement in the `csub` table — first checking source-target script mapping, but if that does not exist, conversion into Latin and then from Latin
-- postprocessing with `fina` table (contextual final forms), and then finally `liga` table (ligatures).
 
 
 | Latn | <Latn | Name   | Arab | Ethi | Armi | Brah | Chrs        | Egyp | Elym | Grek                      | Hatr | Hebr        | Mani | Narb | Nbat        | Palm        | Phli | Phlp | Phnx | Prti | Samr | Sarb | Sogd | Sogo        | Syrc       | Ugar        |
