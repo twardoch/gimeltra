@@ -69,7 +69,7 @@ print(tr("لرموز")
 
 ## Supported scripts
 
-24 scripts: Latn Arab Ethi Armi Brah Chrs Egyp Elym Grek Hatr Hebr Mani Narb Nbat Palm Phli Phlp Phnx Prti Samr Sarb Sogd Sogo Syrc Ugar
+24 scripts: Latn (Latin), Arab (Arabic), Ethi (Ethiopic), Armi (Imperial Aramaic), Brah (Brahmi), Chrs (Chorasmian), Egyp (Egyptian hieroglyphs), Elym (Elymaic), Grek (Greek), Hatr (Hatran), Hebr (Hebrew), Mani (Manichaean), Narb (Old North Arabian), Nbat (Nabataean), Palm (Palmyrene), Phli (Inscriptional Pahlavi), Phlp (Psalter Pahlavi), Phnx (Phoenician), Prti (Inscriptional Parthian), Samr (Samaritan), Sarb (Old South Arabian), Sogd (Sogdian), Sogo (Old Sogdian), Syrc (Syriac), Ugar (Ugaritic)
 
 | Latn | >Latn | Name       | Arab | Ethi | Armi | Brah | Chrs       | Egyp | Elym | Grek                   | Hatr | Hebr        | Mani | Narb | Nbat        | Palm       | Phli | Phlp | Phnx | Prti | Samr | Sarb | Sogd | Sogo        | Syrc      | Ugar       |
 |------|-------|------------|------|------|------|------|------------|------|------|------------------------|------|-------------|------|------|-------------|------------|------|------|------|------|------|------|------|-------------|-----------|------------|
