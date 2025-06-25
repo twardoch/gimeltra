@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import os
 import re
@@ -20,7 +19,7 @@ with open(get_absolute_path("README.md")) as f:
 
 
 def get_version(*args):
-    verstrline = open(get_absolute_path(NAME, "__init__.py"), "rt").read()
+    verstrline = open(get_absolute_path(NAME, "__init__.py")).read()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
     mo = re.search(VSRE, verstrline, re.M)
     if mo:

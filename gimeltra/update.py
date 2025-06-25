@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 from collections import OrderedDict as od
-from yaplon import reader, writer
 from pathlib import Path
-import sys
 
-#od = dict
+from yaplon import reader, writer
+
+# od = dict
 
 cwd = Path(__file__).parent
 
 
-class GimeltraMakeDb(object):
+class GimeltraMakeDb:
     def __init__(self):
-        with open(Path(cwd, "gimeltra.tsv"), "r", encoding="utf-8") as f:
+        with open(Path(cwd, "gimeltra.tsv"), encoding="utf-8") as f:
             self.l = reader.csv(f, header=True)
         self.scs = []
         self.db = od()
@@ -97,15 +96,18 @@ class GimeltraMakeDb(object):
                         )
 
     def save_db(self):
-        data = od([
-            ('ccmp',self.db_ccmp),
-            ('ssub',self.db),
-            ('simp',self.db_simplify),
-            ('fina',self.db_fina),
-            ('liga',self.db_liga),
-        ])
+        data = od(
+            [
+                ("ccmp", self.db_ccmp),
+                ("ssub", self.db),
+                ("simp", self.db_simplify),
+                ("fina", self.db_fina),
+                ("liga", self.db_liga),
+            ]
+        )
         with open(Path(cwd, "gimeltra_data.json"), "w", encoding="utf-8") as f:
             writer.json(data, f)
+
 
 if __name__ == "__main__":
     mdb = GimeltraMakeDb()

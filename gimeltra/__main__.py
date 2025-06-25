@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-"""
+""" """
+
+import logging
+import sys
+from argparse import ArgumentParser
+from pathlib import Path
 
 import gimeltra
-from argparse import ArgumentParser
-import logging
-from pathlib import Path
-import sys
 
 PROG = "gimeltrapy"
 
@@ -49,7 +48,7 @@ def cli():
         "-V",
         "--version",
         action="version",
-        version="%s %s" % (PROG, gimeltra.__version__),
+        version=f"{PROG} {gimeltra.__version__}",
         help="show version and exit",
     )
     return parser
@@ -68,7 +67,7 @@ def main(*args, **kwargs):
     logging.debug("Running with options:\n%s" % repr(opts))
     del opts["verbose"]
     if opts["in_file"]:
-        with open(Path(opts["in_file"]), "r", encoding="utf8") as f:
+        with open(Path(opts["in_file"]), encoding="utf8") as f:
             text = f.read()
     elif opts["text"]:
         text = opts["text"]
@@ -76,7 +75,7 @@ def main(*args, **kwargs):
         text = sys.stdin.read().rstrip()
     tr = gimeltra.gimeltra.Transliterator()
     if opts.get("stats", False):
-        print(f'{len(tr.db.keys()) - 1} scripts: {" ".join(tr.db.keys())}')
+        print(f"{len(tr.db.keys()) - 1} scripts: {' '.join(tr.db.keys())}")
     else:
         res = tr.tr(
             text,
