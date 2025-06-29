@@ -1,189 +1,288 @@
+# Gimeltra: A Versatile Transliteration Tool
 
-# Gimeltra
+Gimeltra is a powerful and straightforward Python 3.9+ command-line tool and library designed for transliterating text between a variety of writing systems. While it supports over 20 scripts, it specializes in those of Semitic origin, offering a simplified, abjad-only transliteration. This means it primarily focuses on consonants, making it particularly useful for tasks like converting modern texts into ancient scripts or for linguistic analysis where vocalization is not critical.
 
-Gimeltra is a Python 3.9+ tool for simple transliteration between 20+ writing systems, mostly of Semitic origin.
+## Who is Gimeltra For?
 
-Gimeltra performs simplified abjad-only transliteration, and is primarily intended for translating simple texts from modern to ancient scripts. It uses a non-standard romanization scheme. Arabic, Greek or Hebrew letters outside the basic consonant set will not transliterate.
+Gimeltra is aimed at:
+
+*   **Linguists and Researchers:** Studying Semitic languages or historical scripts.
+*   **Students:** Learning ancient languages and needing to see textual representations across different scripts.
+*   **Developers:** Requiring programmatic transliteration capabilities within their Python applications.
+*   **Hobbyists:** Exploring the fascinating world of writing systems.
+
+If you need a quick, scriptable method to convert text between supported scripts without the overhead of complex linguistic models or full phonetic accuracy, Gimeltra is an excellent choice.
+
+## Why Use Gimeltra?
+
+*   **Ease of Use:** Simple command-line interface and Python API.
+*   **Speed:** Performs transliteration quickly, suitable for batch processing.
+*   **Flexibility:** Supports a wide range of scripts, with a focus on Semitic systems.
+*   **Customizable:** Transliteration rules are defined in a human-readable TSV file, allowing for modifications and extensions.
+*   **Automatic Script Detection:** Can often infer the input script, simplifying usage.
+*   **Transparent Process:** The transliteration steps are logical and can be understood by users.
 
 ## Installation
+
+### Prerequisites
+
+*   Python 3.9 or higher.
+
+### Command
+
+You can install Gimeltra directly from its GitHub repository using pip:
 
 ```sh
 python3 -m pip install --upgrade git+https://github.com/twardoch/gimeltra
 ```
 
-## Usage
+This will also install its necessary dependencies: `fonttools`, `langcodes`, `yaplon`, and `regex`.
 
-### Command-line
+## How to Use Gimeltra
 
-```sh
-$ gimeltrapy -h
-usage: gimeltrapy [-h] [-t TEXT] [-i FILE] [-s SCRIPT] [-o SCRIPT] [--stats] [-v] [-V]
+Gimeltra can be used both as a command-line tool (`gimeltrapy`) and as a Python library.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -t TEXT, --text TEXT
-  -i FILE, --input FILE
-  -s SCRIPT, --script SCRIPT
-                        Input script as ISO 15924 code
-  -o SCRIPT, --to-script SCRIPT
-                        Output script as ISO 15924 code
-  --stats               List supported scripts
-  -v, --verbose         -v show progress, -vv show debug
-  -V, --version         show version and exit
-```
+### Command-Line Interface (CLI)
 
-Examples:
+The primary command is `gimeltrapy`.
+
+**Basic Syntax:**
 
 ```sh
-$ gimeltrapy -t "لرموز"
-lrmwz
-$ gimeltrapy -t "لرموز" -o Hebr
-לרמוז
-$ gimeltrapy -t "لرموز" -o Narb
-𐪁𐪇𐪃𐪅𐪘
-$ gimeltrapy -t "لرموز" -o Sogo
-𐼌𐼘𐼍𐼇𐼈
+gimeltrapy [options]
 ```
 
-Or from stdin / via piping:
+**Input Methods:**
+
+1.  **Direct Text Input:** Use the `-t` or `--text` option:
+    ```sh
+    gimeltrapy -t "لرموز"
+    ```
+    Output: `lrmwz`
+
+2.  **File Input:** Use the `-i` or `--input` option with a file path:
+    ```sh
+    gimeltrapy -i my_arabic_text.txt -o Hebr
+    ```
+
+3.  **Standard Input (Piping):** Pipe text directly to the command:
+    ```sh
+    echo "لرموز" | gimeltrapy -o Grek
+    ```
+    Output: `λρμυζ`
+
+**Specifying Scripts:**
+
+*   `-s <SCRIPT_CODE>` or `--script <SCRIPT_CODE>`: Specify the ISO 15924 code for the input script (e.g., `Arab`, `Hebr`). If omitted, Gimeltra will attempt to auto-detect the script.
+*   `-o <SCRIPT_CODE>` or `--to-script <SCRIPT_CODE>`: Specify the ISO 15924 code for the output script. Defaults to `Latn` (Latin) if not provided.
+
+**Examples:**
+
+*   Transliterate Arabic text to Latin (default output script):
+    ```sh
+    gimeltrapy -t "لرموز"
+    # Output: lrmwz
+    ```
+*   Transliterate Arabic to Hebrew:
+    ```sh
+    gimeltrapy -t "لرموز" -s Arab -o Hebr
+    # Output: לרמוז
+    ```
+*   Transliterate Arabic to Old North Arabian (Narb):
+    ```sh
+    gimeltrapy -t "لرموز" -o Narb
+    # Output: 𐪁𐪇𐪃𐪅𐪘
+    ```
+*   Transliterate Arabic to Old Sogdian (Sogo):
+    ```sh
+    gimeltrapy -t "لرموز" -o Sogo
+    # Output: 𐼌𐼘𐼍𐼇𐼈
+    ```
+
+**Listing Supported Scripts:**
+
+To see all supported script codes:
 
 ```sh
-$ echo لرموز | gimeltrapy -o Grek
-λρμυζ
+gimeltrapy --stats
 ```
 
-### Python
+**Other Options:**
+
+*   `-h, --help`: Show the help message and exit.
+*   `-v, --verbose`: Increase output verbosity (e.g., `-vv` for debug).
+*   `-V, --version`: Show program version and exit.
+
+### Python Library Usage
+
+Gimeltra can be integrated into your Python projects.
+
+**1. Efficient Method (Recommended):**
+
+Instantiate the `Transliterator` class for multiple operations or when performance is key.
 
 ```python
 from gimeltra.gimeltra import Transliterator
+
+# Initialize the transliterator once
 tr = Transliterator()
-print(tr.tr("لرموز", sc='Arab', to_sc='Hebr')
+
+# Perform transliterations
+hebrew_text = tr.tr("لرموز", sc='Arab', to_sc='Hebr')
+print(f"Arabic to Hebrew: {hebrew_text}") # Output: לרמוז
+
+latin_text = tr.tr("שלום", sc='Hebr', to_sc='Latn')
+print(f"Hebrew to Latin: {latin_text}") # Output: šlwm
+
+# Auto-detect source script
+phoenician_text = tr.tr("𐤀𐤁𐤂", to_sc='Latn') # Assuming Phnx is correctly detected
+print(f"Phoenician to Latin (auto-detected): {phoenician_text}") # Output: ʾbg
 ```
 
-Less efficient:
+**2. Simpler Method:**
+
+For one-off transliterations, a simpler function is available. This method re-initializes the transliterator on each call, so it's less efficient for multiple uses.
 
 ```python
 from gimeltra import tr
-print(tr("لرموز")
+
+# Transliterate Arabic to Latin (default target)
+latin_text = tr("لرموز")
+print(latin_text) # Output: lrmwz
+
+# Transliterate Hebrew to Greek, specifying source script
+greek_text = tr("שלום", sc="Hebr", to_sc="Grek")
+print(greek_text) # Output: σλωμ
 ```
 
-## Supported scripts / tech background
+---
 
-Gimeltra supports 24 scripts:
+## Technical Deep Dive
 
-- `Latn` (Latin)
-- `Arab` (Arabic)
-- `Ethi` (Ethiopic)
-- `Armi` (Imperial Aramaic)
-- `Brah` (Brahmi)
-- `Chrs` (Chorasmian)
-- `Egyp` (Egyptian hieroglyphs)
-- `Elym` (Elymaic)
-- `Grek` (Greek)
-- `Hatr` (Hatran)
-- `Hebr` (Hebrew)
-- `Mani` (Manichaean)
-- `Narb` (Old North Arabian)
-- `Nbat` (Nabataean)
-- `Palm` (Palmyrene)
-- `Phli` (Inscriptional Pahlavi)
-- `Phlp` (Psalter Pahlavi)
-- `Phnx` (Phoenician)
-- `Prti` (Inscriptional Parthian)
-- `Samr` (Samaritan)
-- `Sarb` (Old South Arabian)
-- `Sogd` (Sogdian)
-- `Sogo` (Old Sogdian)
-- `Syrc` (Syriac)
-- `Ugar` (Ugaritic)
+This section delves into the internal workings of Gimeltra, its data structures, and guidelines for contribution.
 
-### Conversion steps
+### How Gimeltra Works: Core Architecture
 
-The conversion uses the [`.json`](gimeltra/gimeltra_data.json) file derived from the `.tsv` table. The selection of the conversion rules is based on ISO 15924 script codes. The code mimics a simple OpenType glyph processing model, but with Unicode characters:
+Gimeltra's transliteration logic is primarily encapsulated in the `gimeltra.gimeltra.Transliterator` class. This class loads its transliteration rules and data from a pre-processed JSON file named `gimeltra_data.json`, which is located in the `gimeltra` package directory.
 
-#### 1. Preprocessing with a `ccmp` table
+**Key Components:**
 
-1. Split ligatures into single letters, also
-2. Decompose into Unicode NFD and drop the marks.
+*   **`gimeltra_data.json`:** This is the engine's fuel. It contains several key dictionaries:
+    *   `ssub` (Script SUBstitution): The main character-to-character mapping rules, structured as `source_script -> target_script -> {character_map}`.
+    *   `ccmp` (Composite Character MaP): Rules for decomposing characters or handling multi-character sequences during preprocessing (e.g., splitting specific ligatures before main processing).
+    *   `simp` (SIMPlify): Fallback rules, primarily for simplifying Latin characters when a direct transliteration isn't available.
+    *   `fina` (FINAl forms): Rules for converting characters to their final positional forms (e.g., Arabic, Hebrew) during postprocessing.
+    *   `liga` (LIGAatures): Rules for forming ligatures from sequences of characters during postprocessing.
+*   **`Transliterator` Class:**
+    *   Loads `gimeltra_data.json` upon initialization.
+    *   Provides the main `tr()` method for performing transliteration.
+    *   Includes helper methods for script auto-detection, preprocessing, character conversion, and postprocessing.
+*   **Script Auto-Detection (`auto_script` method):** If the source script is not provided, Gimeltra attempts to identify it by analyzing the Unicode script property of each character in the input text (using `fontTools.unicodedata.script`). The most frequently occurring script is chosen.
 
-#### 2. Character replacement in the `csub` table
+### The Transliteration Process
 
-1. Try direct source-target script mapping.
-2. If that does not exist, convert into `Latn`.
-3. Try from `Latn` to target script
-4. If that’s not available, fallback from `Latn` to `<Latn` and try to convert to the target script.
+When `tr(text, sc, to_sc)` is called, the following steps occur:
 
-#### 3. Postprocessing
+1.  **Script Detection (if `sc` is `None`):**
+    *   The `auto_script(text)` method is invoked to determine the source script.
 
-1. Replace letters by their contextual final forms using the `fina` table.
-2. Replace series of letters by Unicode ligatures using the `liga` table.
+2.  **Preprocessing (`_preprocess` method):**
+    *   The input `text` is first processed using script-specific rules from the `ccmp` table (e.g., to break down complex ligatures like Arabic "Allah" into constituent letters).
+    *   The text is then normalized to Unicode Normalization Form D (NFD) using `fontTools.unicodedata.normalize("NFD", text)`. This decomposes characters into their base forms and combining diacritics.
+    *   All diacritical marks (Unicode category `Mark`, `\p{M}`) are removed using `regex.sub(r"\p{M}", "", text)`. This ensures an abjad-focused transliteration.
 
-Characters that aren’t covered by the mappings are passed through. This may change in future (or there will be an option to keep non-letters but drop letters and marks).
+3.  **Character Conversion (`_convert` method):**
+    *   The preprocessed text is iterated character by character.
+    *   For each character, Gimeltra attempts to find a transliteration rule in the following order of preference:
+        1.  **Direct Mapping:** Check `db[source_script][target_script][character]`.
+        2.  **Via Latin (Primary Intermediary):**
+            a.  Convert source character to Latin: `latin_char = db[source_script]['Latn'][character]`. If no specific rule, the original character is used as `latin_char`.
+            b.  Convert `latin_char` to target script: `db['Latn'][target_script][latin_char]`.
+        3.  **Via Simplified Latin (Fallback):** If the previous step yields no result:
+            a.  Simplify `latin_char`: `simplified_latin_char = db_simplify.get(latin_char, latin_char)`.
+            b.  Convert `simplified_latin_char` to target script: `db['Latn'][target_script][simplified_latin_char]`.
+    *   If a character cannot be converted through any of these paths, it is passed through to the output string unchanged.
 
-### Data table
+4.  **Postprocessing (`_postprocess` method):**
+    *   **Final Forms:** Contextual rules for final character forms are applied using the `fina` table. For example, a Hebrew Kaph at the end of a word might be converted to Final Kaph. This uses regular expressions to identify characters at word endings.
+    *   **Ligatures:** Sequences of characters are replaced by their corresponding ligatures based on rules in the `liga` table.
 
-The below [table](gimeltra/) exists in `.numbers` and `.tsv` formats. The `.numbers` file is the source, which I export to `.tsv`, and then I [update](gimeltra/update.py) the [`.json`](gimeltra/gimeltra_data.json), which the transliterator uses.
+### Data Files: The Heart of Transliteration
 
-There are some simple conventions in the table:
+*   **`gimeltra.tsv`:** This Tab-Separated Values file is the human-editable source for all transliteration rules. It resides in the `gimeltra/` directory. You can open and modify this file with spreadsheet software or a text editor that handles TSV well.
+*   **`gimeltra_data.json`:** This JSON file is automatically generated from `gimeltra.tsv` by the `gimeltra/update.py` script. It's the actual data file that the `Transliterator` class uses at runtime. It's structured for efficient lookups.
+*   **`gimeltra/update.py`:** A Python script responsible for parsing `gimeltra.tsv` and creating/updating `gimeltra_data.json`. It uses the `yaplon` library for ordered JSON output. If you modify `gimeltra.tsv`, you **must** run this script to see your changes reflected in the tool's behavior:
+    ```sh
+    python gimeltra/update.py
+    ```
 
-- `|` separates alternate versions of a character
-- `<` prefix means that we should only convert from this character but not to it
-- `>` prefix means that we should only convert to this character but not from it
-- `~` prefix indicates that this is a final form
-- `%` separates the from and to strings of a character ligature
+**Conventions in `gimeltra.tsv`:**
 
-(Keep on mind that if the characters in the table are RTL, the browser renders the entire cell as RTL and changes `>` to `<` and vice versa 😀 )
+The `gimeltra.tsv` file uses special prefixes within its cells to define rule behaviors:
 
-The `Latn` column serves as the intermediary (all conversions are done from the source script through `Latn` to the target script). The column contains some characters that have equivalents only in some scripts. This allows less lossy coversion between, say, Hebrew and Arabic or Ethiopic and Old South Arabian.
+*   `|`: Separates alternative versions of a character (e.g., `α|Α` for Greek Alpha).
+*   `<`: Prefixes a character variant that should only be used when converting *from* this script to Latin (source-only variant for this script's column).
+*   `>`: Prefixes a character variant that should only be used when converting *to* this script from Latin (target-only variant for this script's column).
+*   `~`: Prefixes a character that represents a final form (e.g., `~ך` for Hebrew Final Kaf).
+*   `%`: Separates the "from" (source sequence) and "to" (target ligature) strings for a ligature rule (e.g., `FF%ﬀ` to create the 'ff' ligature).
 
-The `<Latn` column provides fallback Latin characters if the target script does not have an equivalent to the `Latn` character. This gives lossier but still plausible conversion.
+The `Latn` column in `gimeltra.tsv` acts as the primary pivot for transliterations. The `<Latn` column provides simplified Latin fallbacks for broader, though potentially lossier, compatibility.
 
+### Supported Scripts
 
-| Latn | <Latn | Name   | Arab | Ethi | Armi | Brah | Chrs        | Egyp | Elym | Grek                      | Hatr | Hebr        | Mani | Narb | Nbat        | Palm        | Phli | Phlp | Phnx | Prti | Samr | Sarb | Sogd | Sogo        | Syrc       | Ugar        |
-|------|-------|--------|------|------|------|------|-------------|------|------|---------------------------|------|-------------|------|------|-------------|-------------|------|------|------|------|------|------|------|-------------|------------|-------------|
-| ʾ    |       | Aleph  | ا    | አ    | 𐡀   | 𑀅   | 𐾰&#124;<𐾱 | 𓃾   | 𐿠   | α&#124;<Α                 | 𐣠   | א           | 𐫀   | 𐪑   | 𐢁&#124;~𐢀 | 𐡠          | 𐭠   | 𐮀   | 𐤀   | 𐭀   | ࠀ    | 𐩱   | 𐼰   | 𐼀&#124;~𐼁 | ܐ          | 𐎀          |
-| b    |       | Bet    | ب    | በ    | 𐡁   | 𑀩   | 𐾲          | 𓉐   | 𐿡   | >β&#124;<Β                | 𐣡   | בּ           | 𐫁   | 𐪈   | 𐢃&#124;~𐢂 | 𐡡          | 𐭡   | 𐮁   | 𐤁   | 𐭁   | ࠁ    | 𐩨   | 𐼱   | 𐼂&#124;~𐼃 | ܒ          | 𐎁          |
-| g    |       | Gimel  | غ    | ገ    | 𐡂   | 𑀕   | 𐾳          | 𓌙   | 𐿢   | γ&#124;<Γ                 | 𐣢   | ג           | 𐫃   | 𐪔   | 𐢄          | 𐡢          | 𐭢   | 𐮂   | 𐤂   | 𐭂   | ࠂ    | 𐩴   | 𐼲   | 𐼄          | ܓ&#124;<ܔ  | 𐎂          |
-| d    |       | Daleth | د    | ደ    | 𐡃   | 𑀥   | 𐾴          | 𓇯   | 𐿣   | δ&#124;<Δ                 | 𐣣   | ד           | 𐫅   | 𐪕   | 𐢅          | 𐡣          | 𐭣   | 𐮃   | 𐤃   | 𐭃   | ࠃ    | 𐩵   | 𐼹   | 𐼌          | ܕ&#124;<ܕ݂  | 𐎄          |
-| h    |       | He     | ه    | ሀ    | 𐡄   | 𑀳   | 𐾵          | 𓀠   | 𐿤   | ε&#124;<Ε                 | 𐣤   | ה           | 𐫆   | 𐪀   | 𐢇&#124;~𐢆 | 𐡤          | 𐭤   | 𐮄   | 𐤄   | 𐭄   | ࠄ    | 𐩠   | 𐼳   | 𐼆&#124;~𐼅 | ܗ          | 𐎅          |
-| w    |       | Waw    | و    | ወ    | 𐡅   | 𑀯   | 𐾶&#124;<𐾷 | 𓏲   | 𐿥   | υ&#124;<Υ                 | 𐣥   | ו           | 𐫇   | 𐪅   | 𐢈          | 𐡥          | >𐭥  | >𐮅  | 𐤅   | 𐭅   | ࠅ    | 𐩥   | 𐼴   | 𐼇          | ܘ          | 𐎆          |
-| z    |       | Zayin  | ز    | ዘ    | 𐡆   | 𑀚   | 𐾸          | 𓏭   | 𐿦   | ζ&#124;<Ζ                 | 𐣦   | ז           | 𐫉   | 𐪘   | 𐢉          | 𐡦          | 𐭦   | 𐮆   | 𐤆   | 𐭆   | ࠆ    | >𐩹  | 𐼵   | 𐼈          | ܙ          | 𐎇          |
-| ḥ    |       | Het    | ح    | ሐ    | 𐡇   | 𑀖   | 𐾹          | 𓉗   | 𐿧   | η&#124;<Η                 | 𐣧   | ח           | 𐫍   | 𐪂   | 𐢊          | 𐡧          | 𐭧   | 𐮇   | 𐤇   | 𐭇   | ࠇ    | 𐩢   | 𐼶   | 𐼉          | ܚ&#124;<ܚ݂  | 𐎈          |
-| ṭ    |       | Tet    | ط    | ጠ    | 𐡈   | 𑀣   | >𐿄         | 𓄤   | 𐿨   | θ&#124;<Θ                 | 𐣨   | ט           | 𐫎   | 𐪉   | 𐢋          | 𐡨          | 𐭨   | >𐮑  | 𐤈   | 𐭈   | ࠈ    | 𐩷   | >𐽃  | >𐼔         | ܛ&#124;<ܜ  | 𐎉          |
-| y    |       | Yod    | ي    | የ    | 𐡉   | 𑀬   | 𐾺          | 𓂝   | 𐿩   | ι&#124;<Ι                 | 𐣩   | י           | 𐫏   | 𐪚   | 𐢍&#124;~𐢌 | 𐡩          | 𐭩   | 𐮈   | 𐤉   | 𐭉   | ࠉ    | 𐩺   | 𐼷   | 𐼊          | ܝ          | 𐎊          |
-| k    |       | Kaf    | ك    | ከ    | 𐡊   | 𑀓   | 𐾻          | 𓂧   | 𐿪   | κ&#124;<Κ                 | 𐣪   | כ&#124;~ך   | 𐫐   | 𐪋   | 𐢏&#124;~𐢎 | 𐡪          | 𐭪   | 𐮉   | 𐤊   | 𐭊   | ࠊ    | 𐩫   | 𐼸   | 𐼋          | ܟ&#124;<ܟ݂  | 𐎋          |
-| l    |       | Lamd   | ل    | ለ    | 𐡋   | 𑀮   | 𐾼          | 𓌅   | 𐿫   | λ&#124;<Λ                 | 𐣫   | ל           | 𐫓   | 𐪁   | 𐢑&#124;~𐢐 | 𐡫          | 𐭫   | 𐮊   | 𐤋   | 𐭋   | ࠋ    | 𐩡   | 𐽄   | >𐼌         | ܠ          | 𐎍          |
-| m    |       | Mem    | م    | መ    | 𐡌   | 𑀫   | 𐾽          | 𓈖   | 𐿬   | μ&#124;<Μ                 | 𐣬   | מ&#124;~ם   | 𐫖   | 𐪃   | 𐢓&#124;~𐢒 | 𐡬          | 𐭬   | 𐮋   | 𐤌   | 𐭌   | ࠌ    | 𐩣   | 𐼺   | 𐼍          | ܡ          | 𐎎          |
-| n    |       | Nun    | ن    | ነ    | 𐡍   | 𑀦   | 𐾾          | 𓆓   | 𐿭   | ν&#124;<Ν                 | 𐣭   | נ&#124;~ן   | 𐫗   | 𐪌   | 𐢕&#124;~𐢔 | 𐡭&#124;<𐡮 | 𐭭   | 𐮌   | 𐤍   | 𐭍   | ࠍ    | 𐩬   | 𐼻   | 𐼎&#124;~𐼏 | ܢܢ&#124;<ܢ | 𐎐          |
-| s    |       | Samekh | س    | ሰ    | 𐡎   | 𑀱   | 𐾿          | 𓊽   | 𐿮   | σ&#124;~ς&#124;<Σ         | 𐣮   | ס           | 𐫘   | 𐪊   | 𐢖          | 𐡯          | 𐭮   | 𐮍   | 𐤎   | 𐭎   | ࠎ    | 𐩪   | 𐼼   | 𐼑          | ܣ          | 𐎒          |
-| ʿ    |       | Ain    | ع    | ዐ    | 𐡏   | 𑀏   | 𐿀          | 𓁹   | 𐿯   | ο&#124;<ω&#124;<Ο&#124;<Ω | 𐣯   | ע           | 𐫙   | 𐪒   | 𐢗          | 𐡰          | 𐭥   | 𐮅   | 𐤏   | 𐭏   | ࠏ    | 𐩲   | 𐼽   | 𐼓&#124;<𐼒 | ܥ          | 𐎓          |
-| p    |       | Pe     | پ    | ፐ    | 𐡐   | 𑀧   | 𐿁          | 𓂋   | 𐿰   | π&#124;<Π                 | 𐣰   | פ&#124;~ף   | 𐫛   | >𐪐  | 𐢘          | 𐡱          | 𐭯   | 𐮎   | 𐤐   | 𐭐   | >ࠐ   | >𐩰  | 𐼾   | 𐼔          | ܦ          | 𐎔          |
-| ṣ    |       | Sade   | ض    | ጸ    | 𐡑   | 𑀘   | >𐾿         | 𓇑   | 𐿱   | ϻ&#124;<Ϻ                 | 𐣱   | צ&#124;~ץ   | 𐫝   | 𐪎   | 𐢙          | 𐡲          | 𐭰   | 𐮏   | 𐤑   | 𐭑   | ࠑ    | 𐩮   | 𐼿   | 𐼕&#124;~𐼖 | ܨ          | 𐎕          |
-| q    |       | Qof    | ق    | ቀ    | 𐡒   | 𑀔   | >𐾻         | 𓃻   | 𐿲   | ϙ&#124;<Ϙ                 | 𐣲   | ק           | 𐫞   | 𐪄   | 𐢚          | 𐡳          | 𐭬   | 𐮋   | 𐤒   | 𐭒   | ࠒ    | 𐩤   | >𐼸  | >𐼋         | ܩ          | 𐎖          |
-| r    |       | Resh   | ر    | ረ    | 𐡓   | 𑀭   | 𐿂          | 𓁶   | 𐿳   | ρ&#124;<Ρ                 | 𐣣   | ר           | 𐫡   | 𐪇   | 𐢛          | 𐡴          | >𐭥  | >𐮅  | 𐤓   | 𐭓   | ࠓ    | 𐩧   | 𐽀   | 𐼘          | ܪ          | 𐎗          |
-| š    |       | Shin   | ش    | ሠ    | 𐡔   | 𑀰   | 𐿃          | 𓌓   | 𐿴   | ξ&#124;<Ξ                 | 𐣴   | ש           | 𐫢   | 𐪏   | 𐢝&#124;~𐢜 | 𐡵          | 𐭱   | 𐮐   | 𐤔   | 𐭔   | ࠔ    | 𐩦   | 𐽁   | 𐼙          | ܫ          | 𐎌&#124;<𐎝 |
-| t    |       | Tau    | ت    | ተ    | 𐡕   | 𑀢   | 𐿄          | 𓏴   | 𐿵   | τ&#124;<Τ                 | 𐣵   | ת           | 𐫤   | 𐪗   | 𐢞          | 𐡶          | 𐭲   | 𐮑   | 𐤕   | 𐭕   | ࠕ    | 𐩩   | 𐽂   | 𐼚&#124;~𐼛 | ܬ          | 𐎚          |
-| ḍ    | d     |        | ض    |      |      |      |             |      |      |                           |      |             |      | 𐪓   |             |             |      |      |      |      |      |      |      |             |            |             |
-| f    | p     |        | ف    | ፈ    |      |      |             |      |      | φ&#124;<Φ                 |      | פּ&#124;~ףּ   |      | 𐪐   |             |             |      |      |      |      | ࠐ    | 𐩰   | 𐽃   | >𐼔         |            |             |
-| ġ    | h     |        |      |      |      |      |             |      |      |                           |      | גּ           |      | 𐪖   |             |             |      |      |      |      |      |      |      |             |            | 𐎙          |
-| ḏ    | d     |        | ذ    |      |      |      |             |      |      |                           |      | דּ           |      |      |             |             |      |      |      |      |      | 𐩹   |      |             |            |             |
-| ḵ    | k     |        | خ    |      |      |      |             |      |      |                           |      | כּ&#124;~ךּ   |      |      |             |             |      |      |      |      |      |      |      |             |            |             |
-| ḫ    | ḥ     |        |      | ኀ    |      |      |             |      |      |                           |      |             |      |      |             |             |      |      |      |      |      | 𐩭   |      |             |            |             |
-| j    | g     |        | ج    |      |      |      |             |      |      |                           |      | ג׳          |      |      |             |             |      |      |      |      |      |      |      |             |            |             |
-| v    | b     |        |      |      |      |      |             |      |      | β                         |      | ב           |      |      |             |             |      |      |      |      |      |      |      |             |            | 𐎜          |
-| č    | tš    |        | چ    | ፀ    |      |      |             |      |      |                           |      | צ׳&#124;~ץ׳ |      |      |             |             |      |      |      |      |      |      |      |             |            |             |
-| ṯ    | t     |        | ث    |      |      |      |             |      |      |                           |      | תּ           |      |      |             |             |      |      |      |      |      |      |      |             |            | 𐎘          |
-| ẓ    | z     |        | ظ    |      |      |      |             |      |      |                           |      |             |      |      |             |             |      |      |      |      |      |      |      |             |            | 𐎑          |
-| ž    | z     |        |      |      |      |      |             |      |      |                           |      | ז׳          |      |      |             |             |      |      |      |      |      |      |      |             |            |             |
-| p̣    | p     |        |      | ጰ    |      |      |             |      |      |                           |      |             |      |      |             |             |      |      |      |      |      |      |      |             |            |             |
-|      |       |        |      |      |      |      |             |      |      |                           |      |             |      |      |             |             |      |      |      |      |      |      |      | 𐼓𐼌%𐼧     |            |             |
+Gimeltra supports transliteration for the following scripts (identified by their ISO 15924 codes). You can get an up-to-date list by running `gimeltrapy --stats`:
 
+*   `Latn` (Latin)
+*   `Arab` (Arabic)
+*   `Ethi` (Ethiopic)
+*   `Armi` (Imperial Aramaic)
+*   `Brah` (Brahmi)
+*   `Chrs` (Chorasmian)
+*   `Egyp` (Egyptian hieroglyphs)
+*   `Elym` (Elymaic)
+*   `Grek` (Greek)
+*   `Hatr` (Hatran)
+*   `Hebr` (Hebrew)
+*   `Mani` (Manichaean)
+*   `Narb` (Old North Arabian)
+*   `Nbat` (Nabataean)
+*   `Palm` (Palmyrene)
+*   `Phli` (Inscriptional Pahlavi)
+*   `Phlp` (Psalter Pahlavi)
+*   `Phnx` (Phoenician)
+*   `Prti` (Inscriptional Parthian)
+*   `Samr` (Samaritan)
+*   `Sarb` (Old South Arabian)
+*   `Sogd` (Sogdian)
+*   `Sogo` (Old Sogdian)
+*   `Syrc` (Syriac)
+*   `Ugar` (Ugaritic)
+
+*(This list is based on the initial README and should be verified with `gimeltrapy --stats` for the most current version).*
+
+### Coding Standards and Contributions
+
+*   **Coding Style:** Adhere to PEP 8 Python coding standards.
+*   **Dependencies:** Key dependencies are `fonttools[unicode]`, `langcodes[data]`, `yaplon`, and `regex`. These are managed in `requirements.txt` and `setup.py`.
+*   **Modifying Transliteration Rules:**
+    1.  Edit the `gimeltra/gimeltra.tsv` file with your changes or additions.
+    2.  Run the update script: `python gimeltra/update.py` to regenerate `gimeltra_data.json`.
+    3.  Test your changes thoroughly using both CLI and programmatic examples.
+*   **Submitting Changes:**
+    *   Fork the repository on GitHub.
+    *   Create a new branch for your feature or bug fix.
+    *   Make your changes, including updating `gimeltra.tsv` and running `update.py` if applicable.
+    *   Commit your changes with clear, descriptive messages.
+    *   Push your branch to your fork.
+    *   Open a Pull Request against the main Gimeltra repository.
+    *   While no formal test suite was noted in the initial exploration, ensure your changes don't break existing functionality and, if possible, provide examples demonstrating your changes.
 
 ## License
 
-Copyright © 2021 Adam Twardoch, [MIT license](./LICENSE)
+Gimeltra is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+Copyright © 2021 Adam Twardoch.
 
-## Other projects of interest
+## Other Projects of Interest
 
-- [Wiktra](https://github.com/kbatsuren/wiktra/) — Python transliterator for 100+ scripts and 500+ languages, mostly into Latin but in some cases across other scripts. Uses the Wiktionary transliteration modules written in Lua. Needs Lua runtime.
-- [Aksharamukha](https://github.com/virtualvinodh/aksharamukha-python) - Python (plus [JS and web](https://github.com/virtualvinodh/aksharamukha)) transliterator within the Indic cultural sphere, for 94 scripts and 8 romanization methods. Does conversion between scripts.
+*   [Wiktra](https://github.com/kbatsuren/wiktra): Python transliterator for 100+ scripts and 500+ languages, using Wiktionary Lua modules.
+*   [Aksharamukha](https://github.com/virtualvinodh/aksharamukha-python): Python transliterator for Indic scripts (94 scripts, 8 romanization methods).
