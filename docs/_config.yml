@@ -1,0 +1,15 @@
+# this_file: docs/_config.yml
+title: Gimeltra
+description: No-nonsense abjad transliteration between mostly-Semitic writing systems
+remote_theme: just-the-docs/just-the-docs
+url: https://twardoch.github.io
+baseurl: /gimeltra
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+
+aux_links:
+  GitHub: https://github.com/twardoch/gimeltra
+
+kramdown:
+  parse_block_html: true

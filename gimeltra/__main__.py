@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-""" """
+# this_file: gimeltra/__main__.py
+"""Command-line entry point for Gimeltra (``gimeltrapy``)."""
 
 import logging
 import sys
@@ -11,7 +12,8 @@ import gimeltra
 PROG = "gimeltrapy"
 
 
-def cli():
+def cli() -> ArgumentParser:
+    """Build the argument parser."""
     parser = ArgumentParser(prog=f"{PROG}")
     parser.add_argument("-t", "--text", metavar="TEXT", dest="text")
     parser.add_argument("-i", "--input", metavar="FILE", dest="in_file")
@@ -54,8 +56,8 @@ def cli():
     return parser
 
 
-def main(*args, **kwargs):
-    parser = cli(*args, **kwargs)
+def main() -> None:
+    parser = cli()
     args = parser.parse_args()
     args.verbose = 40 - (10 * args.verbose) if args.verbose > 0 else 0
     logging.basicConfig(
@@ -64,7 +66,7 @@ def main(*args, **kwargs):
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     opts = vars(args)
-    logging.debug("Running with options:\n%s" % repr(opts))
+    logging.debug(f"Running with options:\n{opts!r}")
     del opts["verbose"]
     if opts["in_file"]:
         with open(Path(opts["in_file"]), encoding="utf8") as f:

@@ -1,0 +1,76 @@
+# this_file: pyproject.toml
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gimeltra"
+dynamic = ["version"]
+description = "No-nonsense abjad transliteration between 24 mostly-Semitic writing systems"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Adam Twardoch", email = "adam+github@twardoch.com" }]
+keywords = ["transliteration", "transliterate", "abjad", "semitic", "unicode", "scripts"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = [
+    "fonttools[unicode]>=4.24.4",
+    "regex>=2021.8.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/twardoch/gimeltra"
+Source = "https://github.com/twardoch/gimeltra"
+Issues = "https://github.com/twardoch/gimeltra/issues"
+
+[project.scripts]
+gimeltrapy = "gimeltra.__main__:main"
+
+[project.optional-dependencies]
+# Only needed to regenerate gimeltra_data.json from gimeltra.tsv (see update.py).
+update = ["yaplon>=1.5.7"]
+dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "mypy>=1.8"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gimeltra"]
+# Ship the compiled ruleset, its TSV source, and update.py (the `update` extra
+# regenerates the JSON from the TSV). Leave the bulky Numbers spreadsheet out.
+exclude = ["gimeltra/gimeltra.numbers"]
+
+[tool.hatch.build.targets.sdist]
+include = ["gimeltra", "tests", "README.md", "CHANGELOG.md", "LICENSE"]
+
+[tool.hatch.envs.hatch-test]
+extra-dependencies = ["pytest-cov>=4"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_ignores = true

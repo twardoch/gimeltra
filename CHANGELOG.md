@@ -1,26 +1,50 @@
+<!-- this_file: CHANGELOG.md -->
+
 # Changelog
 
-## Version 1.0.0+ (Unreleased changes as of 2025-06-25)
+## Unreleased — Modernization (2026-07-05)
 
-### Changed
-- Code formatting improvements across multiple files
-- Updated imports to be more consistent
-- Minor refactoring in `gimeltra.py`, `__main__.py`, and `update.py`
-- Removed unnecessary comments and improved code readability
+### Build & packaging
+- Migrated from `setup.py` to `pyproject.toml` with Hatchling + `hatch-vcs`
+  (version now derived from git tags). Removed `setup.py`, `requirements.txt`,
+  `MANIFEST.in`.
+- Declared runtime dependencies as `fonttools[unicode]` and `regex` only.
+  Dropped the unused `langcodes`; moved `yaplon` to an optional `[update]`
+  extra used solely by `update.py`. Added `[dev]` extra.
+- Corrected the license metadata to MIT (was `GPLv2` in `setup.py`, though the
+  LICENSE file and README were already MIT).
+- Added `build.sh` and `publish.sh`.
+- Wheel ships the ruleset, TSV, and `update.py`; excludes the bulky `.numbers`
+  spreadsheet.
 
-### Notes
-- No functional changes or new features added
-- These appear to be maintenance updates preparing for future development
+### Code
+- Added type hints across `gimeltra.py`, `__main__.py`, and the public API.
+- Added explanatory comments for the abjad reduction and the Latin-pivot
+  conversion, plus the `ccmp`/`fina`/`liga`/`simp` rule passes.
+- **Fixed:** `auto_script("")` raised `IndexError` on empty input; it now
+  returns `Zyyy` (undetermined).
+- **Fixed:** `main()` passed arguments to a zero-arg `cli()`; signatures aligned.
+- Version is now resolved via `importlib.metadata` instead of a hard-coded
+  string.
+
+### Tests & CI
+- Added `tests/test_gimeltra.py`: known conversions, Latin-pivot round-trips,
+  auto-detection, vowel-drop, empty input, and CLI smoke tests (17 tests).
+- Added GitHub Actions `ci.yml` (ruff + mypy + pytest on Python 3.9–3.13) and
+  `release.yml` (build + GitHub release + PyPI trusted publishing on tags).
+- Configured ruff and mypy in `pyproject.toml`; both pass clean.
+
+### Docs
+- Rewrote `README.md` (trimmed, Quick Start first) and added a Just-the-Docs
+  Jekyll site under `docs/` (home, supported-scripts table, TSV rule format).
+- Added `CLAUDE.md` with source-file map and architecture notes.
+- Added a monochrome line-art project icon at `docs/assets/icon.png`.
 
 ## Version 1.0.0 (2021-08-11)
 
-### Initial Release
-- Support for 24 writing systems (mostly Semitic scripts)
-- Command-line interface with options for input/output scripts
-- Python API for programmatic use
-- Simplified abjad-only transliteration
-- Non-standard romanization scheme
-- Support for contextual forms (final forms)
-- Support for ligatures and character compositions
-- Automatic script detection
-- Bidirectional transliteration capabilities
+### Initial release
+- Support for 24 writing systems (mostly Semitic scripts).
+- CLI with input/output script options; Python API.
+- Simplified abjad-only, non-standard romanization.
+- Contextual final forms, ligatures, character compositions.
+- Automatic script detection; bidirectional transliteration.

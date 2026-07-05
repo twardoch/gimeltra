@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-from .gimeltra import *
+# this_file: gimeltra/__init__.py
+"""Gimeltra: abjad transliteration between mostly-Semitic writing systems."""
 
-__version__ = "1.0.0"
-__all__ = ["tr"]
+from importlib.metadata import PackageNotFoundError, version
+
+from .gimeltra import Transliterator, tr
+
+try:
+    __version__ = version("gimeltra")
+except PackageNotFoundError:  # running from a source tree without install metadata
+    __version__ = "0.0.0+unknown"
+
+__all__ = ["Transliterator", "tr", "__version__"]

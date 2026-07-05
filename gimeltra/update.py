@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# this_file: gimeltra/update.py
+"""Regenerate gimeltra_data.json from gimeltra.tsv (dev tool; needs the `update` extra)."""
 
 from collections import OrderedDict as od
 from pathlib import Path
